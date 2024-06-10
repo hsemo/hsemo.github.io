@@ -1,3 +1,4 @@
+/* {"color100":"#f0f6fc","color200":"#c9d1d9","color300":"#b1bac4","color400":"#8b949e","color500":"#6e7681","color600":"#484f58","color700":"#30363d","color800":"#21262d","color900":"#161b22","color1000":"#0d1117"} */
 *{
   margin: 0;
   padding: 0;
@@ -33,25 +34,83 @@ ul {
   list-style: none;
 }
 
-.todo-rmv-btn {
+.todo-input {
+  padding: 0px 8px;
+  background: rgb(31, 32, 35);
+  border: 1px solid rgb(60, 63, 68);
+  border-radius: 4px;
+  font-size: 16px;
+  color: rgb(247, 248, 248);
+  height: 36px;
+  appearance: none;
+  transition: border 0.15s ease 0s;
+}
+
+.todo-input:focus {
+  outline: none;
+  box-shadow: none;
+  border-color: rgb(100, 153, 255);
+}
+
+.todo-rmv-btn, .todo-check-btn {
+  visibility: collapse;
+  position: relative;
   display: inline-block;
   outline: 0;
   cursor: pointer;
-  border-radius: 6px;
-  border: 2px solid #ff4742;
-  color: #ff4742;
+  border: none;
   background: 0 0;
-  padding: 8px;
-  box-shadow: rgba(0, 0, 0, 0.07) 0px 2px 4px 0px, rgba(0, 0, 0, 0.05) 0px 1px 1.5px 0px;
-  font-weight: 800;
-  font-size: 16px;
-  height: 42px;
+  padding: 2px;
+  font-size: 18px;
+  height: 32px;
+  margin: 5px;
 }
-.todo-rmv-btn:hover{
-  background-color: #ff4742;
+
+.todo-rmv-btn:hover, .todo-check-btn:hover{
+  /* background-color: #ff4742; */
   color: #fff;
+}
+
+.todo-checkbox {
+  visibility: collapse;
+  margin: 5px;
 }
 
 .submit-input {
   display: none;
+}
+
+.make-visible {
+  visibility: visible;
+  transition: .5s;
+}
+
+#add-btn {
+  display: inline-block;
+  outline: none;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  border-radius: 500px;
+  transition-property: background-color,border-color,color,box-shadow,filter;
+  transition-duration: .3s;
+  border: 1px solid transparent;
+  letter-spacing: 2px;
+  min-width: 160px;
+  text-transform: uppercase;
+  white-space: normal;
+  font-weight: 700;
+  text-align: center;
+  padding: 16px 14px 18px;
+  color: #616467;
+  box-shadow: inset 0 0 0 2px #616467;
+  background-color: transparent;
+  height: 48px;
+  width: 2em;
+  margin: auto;
+}
+
+#add-btn:hover {
+  color: #fff;
+  background-color: #616467;
 }

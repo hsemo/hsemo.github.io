@@ -13,14 +13,14 @@ window.addEventListener('DOMContentLoaded', () => {
   let inputs = document.getElementsByClassName('todo-input');
   for(const input of inputs){
     input.addEventListener('change', handleEditTodo);
-    input.addEventListener('mouseenter', handleMouseIn);
-    input.addEventListener('mouseleave', handleMouseOut);
   }
 
   // form submit event
   let forms = document.getElementsByClassName('todo-form');
   for(const form of forms){
     form.addEventListener('submit', handleFormSubmit);
+    form.addEventListener('mouseenter', handleMouseIn);
+    form.addEventListener('mouseleave', handleMouseOut);
   }
 
 });
@@ -41,17 +41,20 @@ function handleAddTodo(event){
     action: ''
   });
   form.addEventListener('submit', handleFormSubmit);
+  form.addEventListener('mouseenter', handleMouseIn);
+  form.addEventListener('mouseleave', handleMouseOut);
 
-  let inputCheckbox = createElement('input', {
-    type: 'checkbox',
-    className: 'todo-check-box'
+  let btnCheck = createElement('button', {
+    type: 'button',
+    className: 'todo-check-btn',
+    innerText: '✅'
   });
-  form.appendChild(inputCheckbox);
+  form.appendChild(btnCheck);
 
   let btnRemove = createElement('button', {
     type: 'button',
     className: 'todo-rmv-btn',
-    innerText: 'D'
+    innerText: '❌'
   });
   btnRemove.addEventListener('click', handleRemoveTodo);
   form.appendChild(btnRemove);
@@ -99,9 +102,15 @@ function handleFormSubmit(event){
 
 
 function handleMouseIn(event){
-  event.target.style.backgroundColor = '#ff0000';
+  let tcb = event.target.querySelector('.todo-check-btn');
+  let trb = event.target.querySelector('.todo-rmv-btn');
+  tcb.className += ' make-visible';
+  trb.className += ' make-visible';
 }
 
 function handleMouseOut(event){
-  event.target.style.backgroundColor = '#ffffff';
+  let tcb = event.target.querySelector('.todo-check-btn');
+  let trb = event.target.querySelector('.todo-rmv-btn');
+  tcb.className = tcb.className.split(' ').filter((cls) => cls !== 'make-visible').join(' ');
+  trb.className = trb.className.split(' ').filter((cls) => cls !== 'make-visible').join(' ');
 }
