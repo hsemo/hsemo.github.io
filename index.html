@@ -9,28 +9,21 @@
   </head>
   <body>
     <div class="container">
-      <div class="todo-container unfinished">
-        <ul>
-          <li>
-            <form class="todo-form" action="">
-              <button type="button" class="todo-check-btn">✅</button>
-              <!-- ☑️ -->
-              <button type="button" class="todo-rmv-btn">❌</button>
-              <input class="todo-input" type="text" value="Edit me!" />
-              <input type="submit" class="submit-input" />
-            </form>
+      <div class="todo-container">
+        <ul id="todo-list">
+          <li class="todo-item">
+            <!-- <button type="button" class="todo-check-btn"></button> -->
+            <input class="todo-check-btn" type="checkbox" />
+            <!-- ☑️ -->
+            <button type="button" class="todo-rmv-btn"></button>
+            <input class="todo-input" type="text" value="Edit me!" />
           </li>
         </ul>
       </div>
-      <div class="todo-container finished">
-
-      </div>
-      <div class="todo-container all">
-
-      </div>
-      <button id="add-btn">Add todo</button>
     </div>
 
-    <script src="./main.js"></script>
+    <script type="module" src="./modules/helpers.js"></script>
+    <script type="module" src="./modules/store.js"></script>
+    <script type="module" src="./main.js"></script>
   </body>
 </html>

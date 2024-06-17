@@ -1,116 +1,135 @@
+import $ from './modules/helpers.js';
+import {getStoredTodos, saveTodo, removeTodo} from './modules/store.js';
+
 window.addEventListener('DOMContentLoaded', () => {
   console.log("document loaded.");
-  // add todo event
-  document.querySelector('#add-btn').addEventListener('click', handleAddTodo);
-
-  // remove todo event
-  let rmvBtns = document.getElementsByClassName('todo-rmv-btn');
-  for(const rmvbtn of rmvBtns){
-    rmvbtn.addEventListener('click', handleRemoveTodo);
-  }
-
-  // edit todo event
-  let inputs = document.getElementsByClassName('todo-input');
-  for(const input of inputs){
-    input.addEventListener('change', handleEditTodo);
-  }
-
-  // form submit event
-  let forms = document.getElementsByClassName('todo-form');
-  for(const form of forms){
-    form.addEventListener('submit', handleFormSubmit);
-    form.addEventListener('mouseenter', handleMouseIn);
-    form.addEventListener('mouseleave', handleMouseOut);
-  }
+  addStoredTodos();
+  addEventListeners();
 
 });
 
-function createElement(elementName='', options={}){
-  let element = document.createElement(elementName);
-  // Object.assign can be used here, have to search about it
-  for(const key of Object.keys(options)){
-    element[key] = options[key];
+function createTodo(todo={}){
+  let li = $.createElement('li', {
+    className: 'todo-item',
+  });
+  li.dataset.id = todo.id;
+
+  let completedBtn = $.createElement('input', {
+    type: 'checkbox',
+    className: 'todo-check-btn',
+    checked: todo.completed
+  });
+  li.appendChild(completedBtn);
+
+  let rmvbtn = $.createElement('button', {
+    type: 'button',
+    className: 'todo-rmv-btn',
+  });
+  li.appendChild(rmvbtn);
+
+  let input = $.createElement('input', {
+    className: 'todo-input' + (todo.completed ? ' todo-finished' : ''),
+    placeholder: 'What needs to be done?',
+    value: todo.text
+  });
+  $.on(input, 'keyup', handleEnterKey);
+  li.appendChild(input);
+
+  return li;
+}
+
+function addStoredTodos(){
+  let todos = getStoredTodos();
+
+  if(todos.length == 0){
+    return;
   }
-  return element;
+
+  // clearing hard coded todo item
+  let ul = $('#todo-list');
+  ul.removeChild($('li', ul));
+
+  for(const todo of todos){
+    let li = createTodo(todo);
+    ul.appendChild(li);
+  }
+}
+
+function addEventListeners(){
+  let ul = $('#todo-list');
+
+  // completed event
+  $.delegate(ul, 'click', '.todo-check-btn', handleCompletedTodo);
+
+  // remove event
+  $.delegate(ul, 'click', '.todo-rmv-btn', handleRemoveTodo);
+
+  // input edit event
+  $.delegate(ul, 'focusout', '.todo-input', handleFocusOut);
+
+  // add todo
+  $.on(window, 'keyup', handleAddTodo);
+
 }
 
 function handleAddTodo(event){
-  let li = createElement('li');
-  let form = createElement('form', {
-    className: 'todo-form',
-    action: ''
+  if(event.code !== 'KeyT'){
+    return;
+  }
+  let li = createTodo({
+    id: Date.now(),
+    completed: false,
+    text: ''
   });
-  form.addEventListener('submit', handleFormSubmit);
-  form.addEventListener('mouseenter', handleMouseIn);
-  form.addEventListener('mouseleave', handleMouseOut);
-
-  let btnCheck = createElement('button', {
-    type: 'button',
-    className: 'todo-check-btn',
-    innerText: '✅'
-  });
-  form.appendChild(btnCheck);
-
-  let btnRemove = createElement('button', {
-    type: 'button',
-    className: 'todo-rmv-btn',
-    innerText: '❌'
-  });
-  btnRemove.addEventListener('click', handleRemoveTodo);
-  form.appendChild(btnRemove);
-
-  let input = createElement('input', {
-    className: 'todo-input',
-    type: 'text',
-    value: 'Edit me!'
-  });
-  form.appendChild(input);
-
-  let input2 = createElement('input', {
-    type: 'submit',
-    className: 'submit-input'
-  });
-  form.appendChild(input2);
-
-  li.appendChild(form);
-  document.querySelector('.unfinished ul').appendChild(li);
+  $('#todo-list').appendChild(li);
 }
 
 function handleRemoveTodo(event){
   event.preventDefault();
-  console.log('removing todo...');
-  let li = event.target.parentElement.parentElement;
+  let li = event.target.parentElement;
   let ul = li.parentElement;
   ul.removeChild(li);
+
+  let todo = $.getTodoDataFromInput(event.target);
+  removeTodo(todo);
 }
 
-function handleEditTodo(event){
-  event.preventDefault();
-  console.log('editing todo...');
-  let input = event.target.parentElement.querySelector('.todo-input');
-  input.readOnly = false;
-  input.focus();
+function handleCompletedTodo(event){
+  // event.preventDefault();
+  let li = event.target.parentElement;
+  let input = $('.todo-input', li);
+
+  if(input.className.indexOf(' todo-finished') < 0){
+    input.className += ' todo-finished';
+  }else {
+    input.className = input.className.replace(' todo-finished', '');
+  }
+
+  let todo = $.getTodoDataFromInput(input);
+  console.log('checked: ', todo);
+  saveTodo(todo);
 }
 
-function handleFormSubmit(event){
-  console.log('submiting form...');
-  event.preventDefault();
-  let input = event.target.querySelector('.todo-input');
-  input.readOnly = true;
-  input.blur();
+function handleEnterKey(event){
+  if(event.ctrlKey && event.key === 'Enter'){
+    console.log("Ctrl+Enter pressed");
+  }else if(event.key === 'Enter'){
+    event.target.blur();
+    let todo = $.getTodoDataFromInput(event.target);
+    saveTodo(todo);
+  }
 }
-
 
 function handleMouseIn(event){
-  let tcb = event.target.querySelector('.todo-check-btn');
-  let trb = event.target.querySelector('.todo-rmv-btn');
-  tcb.className += ' make-visible';
-  trb.className += ' make-visible';
 }
 
 function handleMouseOut(event){
-  let tcb = event.target.querySelector('.todo-check-btn');
-  let trb = event.target.querySelector('.todo-rmv-btn');
-  tcb.className = tcb.className.split(' ').filter((cls) => cls !== 'make-visible').join(' ');
-  trb.className = trb.className.split(' ').filter((cls) => cls !== 'make-visible').join(' ');
+}
+
+function handleFocusIn(event){
+}
+
+function handleFocusOut(event){
+  let todo = $.getTodoDataFromInput(event.target);
+  saveTodo(todo);
 }
