@@ -1,0 +1,4 @@
+# Simple todo app
+I never created a web app from _scratch_ in `js/html/css` and directly started learning React. It's not like it is a must that you had to have built some project before you start to learn React but I just had an idea and I wanted to implement it. With this thinking process I started building a todo app and as every programmer underestimates the process of building software I also did. After writing all the code from scratch for this app there were some complications I faced that would have been, I think, easily handled in React like adding and managing eventListeners, structuring your code in a way so you don't freak out when you read it later, handling data etc. but yeah it was a nice experience.
+
+Lol there are more features I want to add but how ironic it would be to add `TODO` list of features inside a todo list project.
