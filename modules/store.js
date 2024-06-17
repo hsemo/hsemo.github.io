@@ -2,7 +2,7 @@ let store = localStorage;
 
 function getStoredTodos(){
   let todos;
-  if(!store.todos){
+  if(!store.todos || store.todos == '[]'){
     todos = [{
       id: Date.now() + '',
       completed: false,

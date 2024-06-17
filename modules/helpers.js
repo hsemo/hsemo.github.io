@@ -51,4 +51,12 @@ $.getTodoDataFromInput = function(input){
   return data;
 }
 
+$.createEmptyTodo = function(){
+  return {
+    id: Date.now(),
+    completed: false,
+    text: ''
+  };
+}
+
 export default $;

@@ -8,7 +8,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 });
 
-function createTodo(todo={}){
+function createTodoElement(todo={}){
   let li = $.createElement('li', {
     className: 'todo-item',
   });
@@ -50,7 +50,7 @@ function addStoredTodos(){
   ul.removeChild($('li', ul));
 
   for(const todo of todos){
-    let li = createTodo(todo);
+    let li = createTodoElement(todo);
     ul.appendChild(li);
   }
 }
@@ -76,18 +76,20 @@ function handleAddTodo(event){
   if(event.code !== 'KeyT'){
     return;
   }
-  let li = createTodo({
+  let li = createTodoElement({
     id: Date.now(),
     completed: false,
     text: ''
   });
   $('#todo-list').appendChild(li);
+  $('.todo-input', li).focus();
 }
 
 function handleRemoveTodo(event){
   event.preventDefault();
   let li = event.target.parentElement;
   let ul = li.parentElement;
+  $('.todo-input', li).removeEventListener('keyup', handleEnterKey);
   ul.removeChild(li);
 
   let todo = $.getTodoDataFromInput(event.target);
@@ -95,7 +97,6 @@ function handleRemoveTodo(event){
 }
 
 function handleCompletedTodo(event){
-  // event.preventDefault();
   let li = event.target.parentElement;
   let input = $('.todo-input', li);
 
@@ -106,27 +107,45 @@ function handleCompletedTodo(event){
   }
 
   let todo = $.getTodoDataFromInput(input);
-  console.log('checked: ', todo);
   saveTodo(todo);
 }
 
 function handleEnterKey(event){
-  if(event.ctrlKey && event.key === 'Enter'){
-    console.log("Ctrl+Enter pressed");
-  }else if(event.key === 'Enter'){
+  event.stopPropagation();
+
+  if(event.key === 'Escape'){
     event.target.blur();
+
+  } else if(event.ctrlKey && event.key === 'Enter'){
+    let li = createTodoElement($.createEmptyTodo());
+
+    event.target.parentElement.insertAdjacentElement('afterend', li);
+
+    $('.todo-input', li).focus();
+
+  } else if(event.shiftKey && event.key === 'Enter'){
     let todo = $.getTodoDataFromInput(event.target);
     saveTodo(todo);
+
+    let prevli = event.target.parentElement.previousSibling;
+    if(prevli){
+      // focus on previous todo
+      $('.todo-input', prevli).focus();
+    }
+
+  } else if(event.key === 'Enter'){
+    let todo = $.getTodoDataFromInput(event.target);
+    saveTodo(todo);
+
+    let nextli = event.target.parentElement.nextSibling;
+    if(nextli){
+      // focus on next todo
+      $('.todo-input', nextli).focus();
+    } else if(event.target.value.trim()){
+      // create new todo if there is no next todo
+      handleAddTodo({code: 'KeyT'});
+    }
   }
-}
-
-function handleMouseIn(event){
-}
-
-function handleMouseOut(event){
-}
-
-function handleFocusIn(event){
 }
 
 function handleFocusOut(event){
