@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Vannila TODO List</title>
+    <link href="css/style.css" rel="stylesheet">
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
+  </head>
+  <body>
+    <div class="container">
+      <div class="todo-container">
+        <ul id="todo-list">
+          <li class="todo-item">
+            <!-- <button type="button" class="todo-check-btn"></button> -->
+            <input class="todo-check-btn" type="checkbox" />
+            <!-- ☑️ -->
+            <button type="button" class="todo-rmv-btn"></button>
+            <input class="todo-input" type="text" value="Edit me!" />
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <script type="module" src="./modules/helpers.js"></script>
+    <script type="module" src="./modules/store.js"></script>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
